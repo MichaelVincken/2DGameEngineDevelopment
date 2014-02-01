@@ -1,8 +1,9 @@
 package game;
 
+import gfx.SpriteSheet;
+
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -28,6 +29,8 @@ public class Game extends Canvas implements Runnable{
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
+	private SpriteSheet spriteSheet = new SpriteSheet("/sprite_sheet.png");
+	
 	public Game(){
 		setMinimumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		setMaximumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));	
@@ -104,7 +107,6 @@ public class Game extends Canvas implements Runnable{
 		for(int i = 0; i < pixels.length; i++){
 			pixels[i] = i + tickCount; 
 		}
-
 	}
 
 	public void render(){
