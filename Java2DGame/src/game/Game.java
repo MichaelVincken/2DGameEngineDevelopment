@@ -1,5 +1,6 @@
 package game;
 
+import gfx.Screen;
 import gfx.SpriteSheet;
 
 import java.awt.BorderLayout;
@@ -29,7 +30,7 @@ public class Game extends Canvas implements Runnable{
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-	private SpriteSheet spriteSheet = new SpriteSheet("/sprite_sheet.png");
+	private Screen screen;
 	
 	public Game(){
 		setMinimumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -49,6 +50,10 @@ public class Game extends Canvas implements Runnable{
 		frame.setVisible(true);
 	}
 
+	public void init(){
+		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
+	}
+	
 	public synchronized void start() {
 		running = true;
 		new Thread(this).start();
@@ -68,6 +73,8 @@ public class Game extends Canvas implements Runnable{
 		long lastTimer = System.currentTimeMillis();
 		double delta = 0;
 
+		init();
+		
 		while (running){
 			long now = System.nanoTime();
 			delta += (now - lastTime) / nsPerTick;
@@ -115,6 +122,8 @@ public class Game extends Canvas implements Runnable{
 			createBufferStrategy(3);
 			return;
 		}
+		
+		screen.render(pixels, 0, WIDTH);
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
