@@ -15,23 +15,23 @@ public abstract class Tile {
 	protected boolean solid;
 	protected boolean emitter;
 
-	public Tile(int id, boolean isSolid, boolean isEmitter){
+	public Tile(int id, boolean isSolid, boolean isEmitter) {
 		this.id = (byte) id;
-		if(tiles[id] != null) throw new RuntimeException("Duplicate the id on" + id);
+		if (tiles[id] != null) throw new RuntimeException("Duplicate the id on" + id);
 		this.solid = isSolid;
 		this.emitter = isEmitter;
 		tiles[id] = this;
 	}
 
-	public byte getId(){
+	public byte getId() {
 		return id;
 	}
 
-	public boolean isSolid(){
+	public boolean isSolid() {
 		return solid;
 	}
 
-	public boolean isEmitter(){
+	public boolean isEmitter() {
 		return emitter;
 	}
 	

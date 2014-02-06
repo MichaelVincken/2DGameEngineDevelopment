@@ -11,6 +11,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import be.vinckenmichael.game.entities.Player;
 import be.vinckenmichael.game.gfx.Colours;
 import be.vinckenmichael.game.gfx.Font;
 import be.vinckenmichael.game.gfx.Screen;
@@ -18,7 +19,7 @@ import be.vinckenmichael.game.gfx.SpriteSheet;
 import be.vinckenmichael.game.level.Level;
 
 
-public class Game extends Canvas implements Runnable{
+public class Game extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,8 +40,9 @@ public class Game extends Canvas implements Runnable{
 	private Screen screen;
 	public InputHandler input;
 	public Level level;
+	public Player player;
 
-	public Game(){
+	public Game() {
 		setMinimumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		setMaximumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));	
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -58,11 +60,11 @@ public class Game extends Canvas implements Runnable{
 		frame.setVisible(true);
 	}
 
-	public void init(){
+	public void init() {
 		int index = 0;
-		for(int r = 0; r < 6; r++){
-			for(int g = 0; g < 6; g++){
-				for(int b = 0; b < 6; b++){
+		for (int r = 0; r < 6; r++) {
+			for (int g = 0; g < 6; g++) {
+				for (int b = 0; b < 6; b++) {
 					int rr = (r * 255/5);
 					int gg = (g * 255/5);
 					int bb = (b * 255/5);
@@ -75,6 +77,8 @@ public class Game extends Canvas implements Runnable{
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
 		input = new InputHandler(this);
 		level = new Level(64,64);
+		player = new Player(level, 0, 0, input);
+		level.addEntity(player);
 	}
 
 	public synchronized void start() {
@@ -86,7 +90,7 @@ public class Game extends Canvas implements Runnable{
 		running = false;
 	}
 
-	public void run(){
+	public void run() {
 		long lastTime = System.nanoTime();
 		double nsPerTick = 1000000000D/60D;
 
@@ -98,13 +102,13 @@ public class Game extends Canvas implements Runnable{
 
 		init();
 
-		while (running){
+		while (running) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / nsPerTick;
 			lastTime = now;
 			boolean shouldRender = true;
 
-			while (delta >= 1){
+			while (delta >= 1) {
 				ticks++;
 				tick();
 				delta -= 1;
@@ -117,12 +121,12 @@ public class Game extends Canvas implements Runnable{
 				e.printStackTrace();
 			}
 
-			if(shouldRender){
+			if (shouldRender) {
 				frames++;
 				render();
 			}
 
-			if (System.currentTimeMillis() - lastTimer >= 1000){
+			if (System.currentTimeMillis() - lastTimer >= 1000) {
 				lastTimer += 1000;
 				System.out.println(frames + ", " + ticks);
 				frames = 0;
@@ -131,53 +135,39 @@ public class Game extends Canvas implements Runnable{
 		}
 	}
 
-	private int x = 0, y = 0;
-
-	public void tick(){
+	public void tick() {
 		tickCount++;
-
-		if(input.up.isPressed()){ 
-			screen.yOffset--;
-		}
-		if(input.down.isPressed()){ 
-			screen.yOffset++;
-		}
-		if(input.left.isPressed()){ 
-			screen.xOffset--;
-		}
-		if(input.right.isPressed()){ 
-			screen.xOffset++;
-		}
-
 		level.tick();
 
 	}
 
-	public void render(){
+	public void render() {
 		BufferStrategy bs = getBufferStrategy();
-		if (bs == null){
+		if (bs == null) {
 			createBufferStrategy(3);
 			return;
 		}
 
-		int xOffset = x - (screen.width / 2);
-		int yOffset = y - (screen.height / 2);
+		int xOffset = player.x - (screen.width / 2);
+		int yOffset = player.y - (screen.height / 2);
 
 		level.renderTiles(screen, xOffset, yOffset);
 
-		for(int x = 0; x < level.width; x++){
+		for (int x = 0; x < level.width; x++) {
 			int colour = Colours.get(-1,-1,-1,000);
-			if(x % 10 == 0 && x != 0){
+			if (x % 10 == 0 && x != 0) {
 				colour = Colours.get(-1, -1, -1, 500);
 			}
 			
 			Font.render((x % 10) + "", screen, 0 + (x * 8), 0, colour);
 		}
+		
+		level.renderEntities(screen);
 
-		for(int y = 0; y < screen.height; y++){
-			for(int x = 0; x < screen.width; x++){
+		for (int y = 0; y < screen.height; y++) {
+			for (int x = 0; x < screen.width; x++) {
 				int colourCode = screen.pixels[x + y * screen.width];
-				if(colourCode < 255) pixels[x + y * WIDTH] = colours[colourCode];
+				if (colourCode < 255) pixels[x + y * WIDTH] = colours[colourCode];
 			}
 		}
 
@@ -187,7 +177,7 @@ public class Game extends Canvas implements Runnable{
 		bs.show();
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		new Game().start();
 	}
 

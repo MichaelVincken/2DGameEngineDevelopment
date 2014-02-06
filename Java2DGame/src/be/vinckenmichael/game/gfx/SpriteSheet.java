@@ -14,7 +14,7 @@ public class SpriteSheet {
 
 	public int[] pixels;
 
-	public SpriteSheet(String path){
+	public SpriteSheet(String path) {
 		BufferedImage image = null;
 
 		try {
@@ -23,7 +23,7 @@ public class SpriteSheet {
 			e.printStackTrace();
 		}
 
-		if(image == null){
+		if (image == null){
 			return;
 		}
 
@@ -33,7 +33,7 @@ public class SpriteSheet {
 
 		pixels = image.getRGB(0, 0, width, height, null, 0, width);
 
-		for(int i = 0; i < pixels.length; i++){
+		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = (pixels[i] & 0xff / 64);
 		}
 	}

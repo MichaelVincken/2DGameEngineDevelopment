@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class InputHandler implements KeyListener {
 
-	public InputHandler(Game game){
+	public InputHandler(Game game) {
 		game.addKeyListener(this);
 	}
 
@@ -13,17 +13,17 @@ public class InputHandler implements KeyListener {
 		private int numTimesPressed = 0;
 		private boolean pressed = false;
 
-		public int getNumTimedPressed(){
+		public int getNumTimedPressed() {
 			return numTimesPressed;
 		}
 
-		public boolean isPressed(){
+		public boolean isPressed() {
 			return pressed;
 		}
 
-		public void toggle(boolean isPressed){
+		public void toggle(boolean isPressed) {
 			pressed = isPressed;
-			if(isPressed) numTimesPressed++;
+			if (isPressed) numTimesPressed++;
 		}
 	}
 
@@ -44,17 +44,17 @@ public class InputHandler implements KeyListener {
 
 	}
 
-	public void toggleKey(int KeyCode, boolean isPressed){
-		if (KeyCode == KeyEvent.VK_W || KeyCode == KeyEvent.VK_UP){
+	public void toggleKey(int KeyCode, boolean isPressed) {
+		if (KeyCode == KeyEvent.VK_W || KeyCode == KeyEvent.VK_UP) {
 			up.toggle(isPressed);
 		}
-		if (KeyCode == KeyEvent.VK_S || KeyCode == KeyEvent.VK_DOWN){
+		if (KeyCode == KeyEvent.VK_S || KeyCode == KeyEvent.VK_DOWN) {
 			down.toggle(isPressed);
 		}
-		if (KeyCode == KeyEvent.VK_A || KeyCode == KeyEvent.VK_LEFT){
+		if (KeyCode == KeyEvent.VK_A || KeyCode == KeyEvent.VK_LEFT) {
 			left.toggle(isPressed);
 		}
-		if (KeyCode == KeyEvent.VK_D || KeyCode == KeyEvent.VK_RIGHT){
+		if (KeyCode == KeyEvent.VK_D || KeyCode == KeyEvent.VK_RIGHT) {
 			right.toggle(isPressed);
 		}
 	}
