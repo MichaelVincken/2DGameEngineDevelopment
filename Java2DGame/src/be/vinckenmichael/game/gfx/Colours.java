@@ -1,4 +1,4 @@
-package gfx;
+package be.vinckenmichael.game.gfx;
 
 public class Colours {
 

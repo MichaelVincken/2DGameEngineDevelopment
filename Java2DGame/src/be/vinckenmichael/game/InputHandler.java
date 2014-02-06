@@ -1,4 +1,4 @@
-package game;
+package be.vinckenmichael.game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

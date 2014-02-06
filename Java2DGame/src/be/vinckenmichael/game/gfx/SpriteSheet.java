@@ -1,4 +1,4 @@
-package gfx;
+package be.vinckenmichael.game.gfx;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -36,7 +36,5 @@ public class SpriteSheet {
 		for(int i = 0; i < pixels.length; i++){
 			pixels[i] = (pixels[i] & 0xff / 64);
 		}
-
 	}
-
 }
