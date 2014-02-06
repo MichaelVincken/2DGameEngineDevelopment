@@ -1,6 +1,7 @@
 package game;
 
 import gfx.Colours;
+import gfx.Font;
 import gfx.Screen;
 import gfx.SpriteSheet;
 
@@ -157,6 +158,10 @@ public class Game extends Canvas implements Runnable{
 				screen.render(x << 3, y << 3, 0, Colours.get(555, 505, 055, 550), flipX, flipY);
 			}
 		}
+
+		String msg = "This is our game!";
+		Font.render(msg, screen, screen.xOffset + screen.width / 2 - ((msg.length() * 8) / 2), 
+				screen.yOffset + screen.height / 2, Colours.get(-1, -1, -1, 000));	
 
 		for(int y = 0; y < screen.height; y++){
 			for(int x = 0; x < screen.width; x++){
