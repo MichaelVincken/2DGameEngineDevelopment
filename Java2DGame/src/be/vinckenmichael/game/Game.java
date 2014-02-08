@@ -159,7 +159,7 @@ public class Game extends Canvas implements Runnable {
 				colour = Colours.get(-1, -1, -1, 500);
 			}
 			
-			Font.render((x % 10) + "", screen, 0 + (x * 8), 0, colour);
+			Font.render((x % 10) + "", screen, 0 + (x * 8), 0, colour, 0x00);
 		}
 		
 		level.renderEntities(screen);
