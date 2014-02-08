@@ -10,7 +10,9 @@ public abstract class Tile {
 	public static final Tile VOID = new BasicSolidTile(0, 0, 0, Colours.get(000, -1, -1, -1), 0xff000000);
 	public static final Tile STONE = new BasicSolidTile(1, 1, 0, Colours.get(-1, 333, -1, -1), 0xff555555);
 	public static final Tile GRASS = new BasicTile(2, 2, 0, Colours.get(-1, 131, 141, -1), 0xff00ff00);
-
+	public static final Tile WATER = new AnimatedTile(3, new int [][] {{0, 5}, {1, 5}, {2, 5}, {1, 5}}, 
+			Colours.get(-1, 004, 115, -1), 0xFF0000FF, 1000);
+	
 	protected byte id;
 	protected boolean solid;
 	protected boolean emitter;
@@ -40,6 +42,8 @@ public abstract class Tile {
 	public int getLevelColour() {
 		return levelColour;
 	}
+	
+	public abstract void tick();
 	
 	public abstract void render(Screen screen, Level level, int x, int y);
 

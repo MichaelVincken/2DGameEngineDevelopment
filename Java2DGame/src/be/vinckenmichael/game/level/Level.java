@@ -33,7 +33,7 @@ public class Level {
 			this.generateLevel();
 		}
 	}
-	
+
 	private void loadLevelFromFile() {
 		try {
 			this.image = ImageIO.read(Level.class.getResource(this.imagePath));
@@ -45,7 +45,7 @@ public class Level {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void loadTiles() {
 		int[] tileColours = this.image.getRGB(0, 0, width, height, null, 0, width);
 		for (int y = 0; y < height; y++) {
@@ -59,7 +59,7 @@ public class Level {
 			}
 		}
 	}
-	
+
 	private void saveLevelToFile() {
 		try {
 			ImageIO.write(image, "png", new File(Level.class.getResource(this.imagePath).getFile()));
@@ -67,12 +67,12 @@ public class Level {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void alterTile(int x, int y, Tile newTile) {
 		this.tiles[x + y * width] = newTile.getId();
 		image.setRGB(x, y, newTile.getLevelColour());
 	}
-	
+
 	public void generateLevel() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -89,6 +89,14 @@ public class Level {
 		for (Entity e : entities) {
 			e.tick();
 		}
+
+		for (Tile t : Tile.tiles) {
+			if (t == null) {
+				break;
+			}
+			t.tick();
+		}
+
 	}
 
 	public void renderTiles(Screen screen, int xOffset, int yOffset) {
