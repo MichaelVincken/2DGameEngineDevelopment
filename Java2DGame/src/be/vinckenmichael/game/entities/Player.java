@@ -10,7 +10,7 @@ public class Player extends Mob {
 	private InputHandler input;
 	private int colour = Colours.get(-1, 111, 145, 543);
 	private int scale = 1;
-	
+
 	public Player(Level level, int x, int y, InputHandler input) {
 		super(level, "Player", x, y, 1);
 		this.input = input;
@@ -47,14 +47,14 @@ public class Player extends Mob {
 		int walkingSpeed = 4;
 		int flipTop = (numSteps >> walkingSpeed) & 1;
 		int flipBottom = (numSteps >> walkingSpeed) & 1;
-		
+
 		if (movingDir == 1) {
 			xTile += 2;
 		} else if (movingDir > 1) {
 			xTile += 4 + ((numSteps >> walkingSpeed) & 1) * 2;
 			flipTop = (movingDir - 1) % 2;
 		}
-		
+
 		int modifier = 8 * scale;
 		int xOffset = x - modifier / 2;
 		int yOffset = y - modifier / 2 - 4;
@@ -66,7 +66,35 @@ public class Player extends Mob {
 	}
 
 	public boolean hasCollided(int xa, int ya) {
+		int xMin = 0;
+		int xMax = 7;
+		int yMin = 3;
+		int yMax = 7;
+
+		for (int x = xMin; x < xMax; x++) {
+			if (isSolidTile(xa, ya, x, yMin)) {
+				return true;
+			}
+		}
+
+		for (int x = xMin; x < xMax; x++) {
+			if (isSolidTile(xa, ya, x, yMax)) {
+				return true;
+			}
+		}
+
+		for (int y = yMin; y < yMax; y++) {
+			if (isSolidTile(xa, ya, xMin, y)) {
+				return true;
+			}
+		}
+
+		for (int y = yMin; y < yMax; y++) {
+			if (isSolidTile(xa, ya, xMax, y)) {
+				return true;
+			}
+		}
+
 		return false;
 	}
-
 }
