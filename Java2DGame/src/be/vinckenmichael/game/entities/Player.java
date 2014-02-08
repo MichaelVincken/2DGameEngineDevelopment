@@ -2,6 +2,7 @@ package be.vinckenmichael.game.entities;
 
 import be.vinckenmichael.game.InputHandler;
 import be.vinckenmichael.game.gfx.Colours;
+import be.vinckenmichael.game.gfx.Font;
 import be.vinckenmichael.game.gfx.Screen;
 import be.vinckenmichael.game.level.Level;
 
@@ -12,10 +13,12 @@ public class Player extends Mob {
 	private int scale = 1;
 	protected boolean isSwimming = false;
 	private int tickCount = 0;
-	
-	public Player(Level level, int x, int y, InputHandler input) {
+	private String username;
+
+	public Player(Level level, int x, int y, InputHandler input, String username) {
 		super(level, "Player", x, y, 1);
 		this.input = input;
+		this.username = username;
 	}
 
 	public void tick() {
@@ -49,7 +52,7 @@ public class Player extends Mob {
 		if (isSwimming && level.getTile(this.x >> 3, this.y >> 3).getId() != 3) {
 			isSwimming = false;
 		}
-		
+
 		tickCount++;
 	}
 
@@ -85,17 +88,21 @@ public class Player extends Mob {
 				yOffset -= 1;
 				waterColour = Colours.get(-1, 225, 115, -1);
 			}
-			
+
 			screen.render(xOffset, yOffset + 3, 0 + 27 * 32, waterColour, 0x00, 1);
 			screen.render(xOffset + 8, yOffset + 3, 0 + 27 * 32, waterColour, 0x01, 1);
 		}
-		
+
 		screen.render(xOffset + (modifier * flipTop), yOffset, xTile + yTile * 32, colour, flipTop, scale);
 		screen.render(xOffset + modifier - (modifier * flipTop), yOffset, (xTile + 1) + yTile * 32, colour, flipTop, scale);
 
 		if (!isSwimming) {
 			screen.render(xOffset + (modifier * flipBottom), yOffset + modifier, xTile + (yTile + 1) * 32, colour, flipBottom, scale);
 			screen.render(xOffset + modifier - (modifier * flipBottom), yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, colour, flipBottom, scale);
+		}
+
+		if (username != null) {
+			Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
 		}
 	}
 
