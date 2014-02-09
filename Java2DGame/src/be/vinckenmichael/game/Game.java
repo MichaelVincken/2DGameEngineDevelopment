@@ -18,6 +18,8 @@ import be.vinckenmichael.game.gfx.Font;
 import be.vinckenmichael.game.gfx.Screen;
 import be.vinckenmichael.game.gfx.SpriteSheet;
 import be.vinckenmichael.game.level.Level;
+import be.vinckenmichael.game.net.GameClient;
+import be.vinckenmichael.game.net.GameServer;
 
 
 public class Game extends Canvas implements Runnable {
@@ -42,6 +44,9 @@ public class Game extends Canvas implements Runnable {
 	public InputHandler input;
 	public Level level;
 	public Player player;
+
+	private GameClient socketClient;
+	private GameServer socketServer;
 
 	public Game() {
 		setMinimumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -80,11 +85,20 @@ public class Game extends Canvas implements Runnable {
 		level = new Level("/levels/water_test_level.png");
 		player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please enter a username"));
 		level.addEntity(player);
+		socketClient.sendData("ping".getBytes());
 	}
 
 	public synchronized void start() {
 		running = true;
 		new Thread(this).start();
+
+		if (JOptionPane.showConfirmDialog(this, "Do you want to run the server") == 0) {
+			socketServer = new GameServer(this);
+			socketServer.start();
+		}
+
+		socketClient = new GameClient(this, "localhost");
+		socketClient.start();
 	}
 
 	public synchronized void stop() {
@@ -129,7 +143,7 @@ public class Game extends Canvas implements Runnable {
 
 			if (System.currentTimeMillis() - lastTimer >= 1000) {
 				lastTimer += 1000;
-				System.out.println(frames + ", " + ticks);
+				frame.setTitle(ticks + " ticks, " + frames + " frames");
 				frames = 0;
 				ticks = 0;
 			}
@@ -159,10 +173,10 @@ public class Game extends Canvas implements Runnable {
 			if (x % 10 == 0 && x != 0) {
 				colour = Colours.get(-1, -1, -1, 500);
 			}
-			
+
 			Font.render((x % 10) + "", screen, 0 + (x * 8), 0, colour, 0x00);
 		}
-		
+
 		level.renderEntities(screen);
 
 		for (int y = 0; y < screen.height; y++) {
