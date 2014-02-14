@@ -23,7 +23,8 @@ public class InputHandler implements KeyListener {
 
 		public void toggle(boolean isPressed) {
 			pressed = isPressed;
-			if (isPressed) numTimesPressed++;
+			if (isPressed)
+				numTimesPressed++;
 		}
 	}
 
@@ -33,11 +34,11 @@ public class InputHandler implements KeyListener {
 	public Key right = new Key();
 
 	public void keyPressed(KeyEvent e) {
-		toggleKey(e.getKeyCode(),true);
+		toggleKey(e.getKeyCode(), true);
 	}
 
 	public void keyReleased(KeyEvent e) {
-		toggleKey(e.getKeyCode(),false);
+		toggleKey(e.getKeyCode(), false);
 	}
 
 	public void keyTyped(KeyEvent e) {

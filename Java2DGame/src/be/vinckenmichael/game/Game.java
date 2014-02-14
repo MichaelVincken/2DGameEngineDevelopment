@@ -1,6 +1,5 @@
 package be.vinckenmichael.game;
 
-
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -20,7 +19,7 @@ import be.vinckenmichael.game.gfx.SpriteSheet;
 import be.vinckenmichael.game.level.Level;
 import be.vinckenmichael.game.net.GameClient;
 import be.vinckenmichael.game.net.GameServer;
-
+import be.vinckenmichael.game.net.packets.Packet00Login;
 
 public class Game extends Canvas implements Runnable {
 
@@ -36,9 +35,11 @@ public class Game extends Canvas implements Runnable {
 	public boolean running = false;
 	public int tickCount = 0;
 
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-	private int[] colours = new int[6*6*6];
+	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT,
+			BufferedImage.TYPE_INT_RGB);
+	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer())
+			.getData();
+	private int[] colours = new int[6 * 6 * 6];
 
 	private Screen screen;
 	public InputHandler input;
@@ -49,9 +50,9 @@ public class Game extends Canvas implements Runnable {
 	private GameServer socketServer;
 
 	public Game() {
-		setMinimumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
-		setMaximumSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));	
-		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
+		setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+		setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
 		frame = new JFrame(NAME);
 
@@ -71,28 +72,33 @@ public class Game extends Canvas implements Runnable {
 		for (int r = 0; r < 6; r++) {
 			for (int g = 0; g < 6; g++) {
 				for (int b = 0; b < 6; b++) {
-					int rr = (r * 255/5);
-					int gg = (g * 255/5);
-					int bb = (b * 255/5);
+					int rr = (r * 255 / 5);
+					int gg = (g * 255 / 5);
+					int bb = (b * 255 / 5);
 
 					colours[index++] = rr << 16 | gg << 8 | bb;
 				}
-			}	
+			}
 		}
 
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
 		input = new InputHandler(this);
 		level = new Level("/levels/water_test_level.png");
-		player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please enter a username"));
-		level.addEntity(player);
-		socketClient.sendData("ping".getBytes());
+		// player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(
+		// this, "Please enter a username"));
+		// level.addEntity(player);
+		// socketClient.sendData("ping".getBytes());
+		Packet00Login loginPacket = new Packet00Login(
+				JOptionPane.showInputDialog(this, "Please enter a username"));
+		loginPacket.writeData(socketClient);
 	}
 
 	public synchronized void start() {
 		running = true;
 		new Thread(this).start();
 
-		if (JOptionPane.showConfirmDialog(this, "Do you want to run the server") == 0) {
+		if (JOptionPane
+				.showConfirmDialog(this, "Do you want to run the server") == 0) {
 			socketServer = new GameServer(this);
 			socketServer.start();
 		}
@@ -107,7 +113,7 @@ public class Game extends Canvas implements Runnable {
 
 	public void run() {
 		long lastTime = System.nanoTime();
-		double nsPerTick = 1000000000D/60D;
+		double nsPerTick = 1000000000D / 60D;
 
 		int ticks = 0;
 		int frames = 0;
@@ -169,7 +175,7 @@ public class Game extends Canvas implements Runnable {
 		level.renderTiles(screen, xOffset, yOffset);
 
 		for (int x = 0; x < level.width; x++) {
-			int colour = Colours.get(-1,-1,-1,000);
+			int colour = Colours.get(-1, -1, -1, 000);
 			if (x % 10 == 0 && x != 0) {
 				colour = Colours.get(-1, -1, -1, 500);
 			}
@@ -182,7 +188,8 @@ public class Game extends Canvas implements Runnable {
 		for (int y = 0; y < screen.height; y++) {
 			for (int x = 0; x < screen.width; x++) {
 				int colourCode = screen.pixels[x + y * screen.width];
-				if (colourCode < 255) pixels[x + y * WIDTH] = colours[colourCode];
+				if (colourCode < 255)
+					pixels[x + y * WIDTH] = colours[colourCode];
 			}
 		}
 

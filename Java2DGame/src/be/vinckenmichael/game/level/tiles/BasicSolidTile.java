@@ -6,5 +6,5 @@ public class BasicSolidTile extends BasicTile {
 		super(id, x, y, tileColour, levelColour);
 		this.solid = true;
 	}
-	
+
 }
